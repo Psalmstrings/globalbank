@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure PIN Code Generator</title>
+    <title>Globale Intermediär Bank - PIN Generator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -238,9 +238,15 @@
             transition: all 0.3s;
         }
         
-        .unblur-btn:hover {
+        .unblur-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .unblur-btn:disabled {
+            background: linear-gradient(to right, #9e9e9e, #757575);
+            cursor: not-allowed;
+            opacity: 0.7;
         }
         
         .footer {
@@ -272,7 +278,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-lock"></i>Global Intermediary Bank</h1>
+            <h1><i class="fas fa-lock"></i> Globale Intermediär Bank</h1>
             <p>Geben Sie Ihre Daten ein, um einen sicheren PIN-Code für den Zugriff auf Ihre Mittel zu generieren</p>
         </div>
         
@@ -281,12 +287,12 @@
                 <form id="userForm">
                     <div class="form-group">
                         <label for="name"><i class="fas fa-user"></i> Vollständiger Name:</label>
-                        <input type="text" id="name" placeholder="Geben Sie Ihren vollständigen Name" required>
+                        <input type="text" id="name" placeholder="Geben Sie Ihren vollständigen Namen ein" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="address"><i class="fas fa-home"></i> Name der Bank:</label>
-                        <textarea id="address" placeholder="Geben Sie Ihren Banknamen ein" required></textarea>
+                        <label for="bankName"><i class="fas fa-university"></i> Name der Bank:</label>
+                        <textarea id="bankName" placeholder="Geben Sie Ihren Banknamen ein" required></textarea>
                     </div>
                     
                     <button type="submit" class="submit-btn">
@@ -303,12 +309,12 @@
                     <button class="pin-btn blurred" id="pinCode">XXXX-XXXX-XXXX</button>
                 </div>
                 
-                <button class="unblur-btn" id="unblurBtn" disabled>
+                <button class="unblur-btn" id="unblurBtn">
                     <i class="fas fa-eye"></i> Klicken Sie hier, um den PIN anzuzeigen
                 </button>
                 
                 <div class="instruction">
-                    <p><i class="fas fa-exclamation-triangle"></i> <strong>WICHTIGE ANWEISUNG:</strong> Um auf Ihren PIN-Code zuzugreifen und Ihre Mittel freizuschalten, müssen Sie eine Bearbeitungsgebühr von <strong>1,800.00 €</strong> an unser sicheres Zahlungsgateway bezahlen.</p>
+                    <p><i class="fas fa-exclamation-triangle"></i> <strong>WICHTIGE ANWEISUNG:</strong> Um auf Ihren PIN-Code zuzugreifen und Ihre Mittel freizuschalten, müssen Sie eine Bearbeitungsgebühr von <strong>1.800,00 €</strong> an unser sicheres Zahlungsgateway bezahlen.</p>
                 </div>
                 
                 <div class="payment-info">
@@ -324,7 +330,7 @@
         </div>
         
         <div class="footer">
-            <p>© 2023 Secure PIN Generator. Alle Rechte vorbehalten. | <i class="fas fa-shield-alt"></i> Bank-Level Sicherheit </p>
+            <p>© 2023 Globale Intermediär Bank. Alle Rechte vorbehalten. | <i class="fas fa-shield-alt"></i> Bank-Level Sicherheit </p>
         </div>
     </div>
     
@@ -343,10 +349,6 @@
             const pinSection = document.getElementById('pinSection');
             const pinCode = document.getElementById('pinCode');
             const unblurBtn = document.getElementById('unblurBtn');
-            
-            // Set today's date as max for DOB field
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('dob').setAttribute('max', today);
             
             // Generate a random PIN code
             function generatePinCode() {
@@ -370,12 +372,11 @@
                 
                 // Get form values
                 const name = document.getElementById('name').value;
-                const dob = document.getElementById('dob').value;
-                const address = document.getElementById('address').value;
+                const bankName = document.getElementById('bankName').value;
                 
                 // Basic validation
-                if (!name || !dob || !address) {
-                    alert('Please fill in all fields');
+                if (!name || !bankName) {
+                    alert('Bitte füllen Sie alle Felder aus');
                     return;
                 }
                 
@@ -385,6 +386,9 @@
                 // Generate and set PIN code
                 const pin = generatePinCode();
                 pinCode.textContent = pin;
+                
+                // Enable the unblur button
+                unblurBtn.disabled = false;
                 
                 // Show PIN section
                 setTimeout(() => {
@@ -397,13 +401,15 @@
             // Toggle blur on PIN code
             let isBlurred = true;
             unblurBtn.addEventListener('click', function() {
+                if (unblurBtn.disabled) return;
+                
                 if (isBlurred) {
                     pinCode.classList.remove('blurred');
-                    unblurBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Click to Hide PIN';
+                    unblurBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Klicken Sie hier, um den PIN zu verbergen';
                     unblurBtn.style.background = 'linear-gradient(to right, #f44336, #d32f2f)';
                 } else {
                     pinCode.classList.add('blurred');
-                    unblurBtn.innerHTML = '<i class="fas fa-eye"></i> Click to Reveal PIN';
+                    unblurBtn.innerHTML = '<i class="fas fa-eye"></i> Klicken Sie hier, um den PIN anzuzeigen';
                     unblurBtn.style.background = 'linear-gradient(to right, #4CAF50, #2E7D32)';
                 }
                 isBlurred = !isBlurred;
@@ -412,6 +418,16 @@
             // Generate a PIN code on page load for demo purposes
             const demoPin = generatePinCode();
             pinCode.textContent = demoPin;
+            
+            // Also make PIN code temporarily visible when clicked
+            pinCode.addEventListener('click', function() {
+                if (!pinCode.classList.contains('blurred')) return;
+                
+                pinCode.classList.remove('blurred');
+                setTimeout(() => {
+                    pinCode.classList.add('blurred');
+                }, 2000); // Auto-blur after 2 seconds
+            });
         });
     </script>
 </body>
