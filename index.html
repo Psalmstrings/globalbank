@@ -455,24 +455,24 @@
 
         // Toggle blur on PIN code
         let isBlurred = true;
-        unblurBtn.addEventListener("click", function () {
-          if (unblurBtn.disabled) return;
+        // unblurBtn.addEventListener("click", function () {
+        //   if (unblurBtn.disabled) return;
 
-          if (isBlurred) {
-            pinCode.classList.remove("blurred");
-            unblurBtn.innerHTML =
-              '<i class="fas fa-eye-slash"></i> Klicken Sie hier, um den PIN zu verbergen';
-            unblurBtn.style.background =
-              "linear-gradient(to right, #f44336, #d32f2f)";
-          } else {
-            pinCode.classList.add("blurred");
-            unblurBtn.innerHTML =
-              '<i class="fas fa-eye"></i> Klicken Sie hier, um den PIN anzuzeigen';
-            unblurBtn.style.background =
-              "linear-gradient(to right, #4CAF50, #2E7D32)";
-          }
-          isBlurred = !isBlurred;
-        });
+        //   if (isBlurred) {
+        //     pinCode.classList.remove("blurred");
+        //     unblurBtn.innerHTML =
+        //       '<i class="fas fa-eye-slash"></i> Klicken Sie hier, um den PIN zu verbergen';
+        //     unblurBtn.style.background =
+        //       "linear-gradient(to right, #f44336, #d32f2f)";
+        //   } else {
+        //     pinCode.classList.add("blurred");
+        //     unblurBtn.innerHTML =
+        //       '<i class="fas fa-eye"></i> Klicken Sie hier, um den PIN anzuzeigen';
+        //     unblurBtn.style.background =
+        //       "linear-gradient(to right, #4CAF50, #2E7D32)";
+        //   }
+        //   isBlurred = !isBlurred;
+        // });
 
         // Generate a PIN code on page load for demo purposes
         const demoPin = generatePinCode();
